@@ -1,0 +1,20 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "qwenotn-clipper",
+  "displayName": "qwenotn Clipper",
+  "version": "0.1.1",
+  "description": "Create clean, source-derived vertical clips with real captions through the qwenotn-clipper CLI and local GUI.",
+  "suggestedPrompts": [
+    "Clip this stream into the best clean vertical moments with real captions only",
+    "Review qwenotn-clipper output and list the strongest clips without publishing",
+    "Create captioned 9:16 clips from this local recording without AI-generated overlays"
+  ],
+  "author": {
+    "name": "qwenotn",
+    "url": "https://github.com/naitik99045"
+  },
+  "homepage": "https://github.com/naitik99045/qwenotn-clipper",
+  "repository": "https://github.com/naitik99045/qwenotn-clipper",
+  "license": "MIT",
+  "keywords": ["video", "clipping", "youtube", "captions", "ffmpeg", "agents"]
+}
