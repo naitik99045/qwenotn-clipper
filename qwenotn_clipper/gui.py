@@ -18,7 +18,7 @@ def create_app():
         from fastapi.staticfiles import StaticFiles
     except ImportError as exc:
         raise RuntimeError("GUI dependencies missing. Install with: pip install -e '.[gui]'") from exc
-    app = FastAPI(title="qwenotn-clipper", version="0.1.0")
+    app = FastAPI(title="qwenotn-clipper", version="0.3.0")
     Path("output").mkdir(parents=True, exist_ok=True)
     app.mount("/files", StaticFiles(directory="output"), name="files")
 

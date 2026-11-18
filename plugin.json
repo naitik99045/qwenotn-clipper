@@ -2,7 +2,7 @@
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "qwenotn-clipper",
   "displayName": "qwenotn Clipper",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Create clean, source-derived vertical clips with real captions through the qwenotn-clipper CLI and local GUI.",
   "suggestedPrompts": [
     "Clip this stream into the best clean vertical moments with real captions only",

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qwenotn-clipper"
-version = "0.2.0"
+version = "0.3.0"
 description = "A local, agent-friendly YouTube/VOD clipper with deterministic highlights and clean captions."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -15,7 +15,9 @@ dependencies = []
 [project.optional-dependencies]
 gui = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9"]
 transcribe = ["faster-whisper>=1.0"]
-all = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9", "faster-whisper>=1.0"]
+vision = ["opencv-python>=4.8", "pytesseract>=0.3.10"]
+audio = ["numpy>=1.24"]
+all = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9", "faster-whisper>=1.0", "opencv-python>=4.8", "pytesseract>=0.3.10", "numpy>=1.24"]
 test = ["pytest>=8.0"]
 
 [project.scripts]

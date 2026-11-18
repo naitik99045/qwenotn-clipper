@@ -25,8 +25,12 @@ The host also needs `ffmpeg` and `yt-dlp`. If the command is unavailable, report
 ```bash
 qwenotn-clipper clip INPUT \
   --count 5 \
-  --duration 45 \
+  --duration auto \
+  --game generic \
+  --event "" \
   --focus "best genuine moments" \
+  --caption-style gaming \
+  --crop smart \
   --output output/agent-job \
   --json > output/agent-job/result.json
 ```
@@ -40,6 +44,16 @@ qwenotn-clipper analyze INPUT --count 30 --duration 45 --focus "funny GTA moment
 ```
 
 The tool rejects an active livestream before downloading it. Do not override this safety behavior. Wait for the replay/VOD or use a dedicated bounded live-window implementation.
+
+For a permitted gameplay VOD, use an event focus when appropriate:
+
+```bash
+qwenotn-clipper highlight INPUT --game generic --event headshot --count 1 --duration auto --vision --json
+```
+
+`--vision` is optional and may report only conservative frame-change evidence. Never describe a candidate as a verified headshot unless the manifest evidence and human review support that claim.
+
+If YouTube asks for the user's own permitted authentication, pass `--cookies-from-browser chrome` or `--cookies FILE`; never print or store cookie contents.
 
 ## Review policy
 

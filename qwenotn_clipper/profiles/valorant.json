@@ -1,0 +1,7 @@
+{
+  "name": "valorant",
+  "description": "Profile metadata for Valorant HUD evidence; recognition remains confidence-scored and reviewable.",
+  "ocr_keywords": ["HEADSHOT", "KILL", "ELIMINATED", "ACE", "ROUND WON", "CLUTCH"],
+  "regions": {"kill_feed": [0.70, 0.02, 0.29, 0.25], "objective": [0.30, 0.02, 0.40, 0.18], "center": [0.25, 0.20, 0.50, 0.60]},
+  "weights": {"visual": 0.35, "audio": 0.2, "transcript": 0.2, "focus": 0.1, "context": 0.1, "motion": 0.05}
+}

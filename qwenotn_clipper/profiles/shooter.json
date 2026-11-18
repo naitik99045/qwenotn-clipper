@@ -1,0 +1,7 @@
+{
+  "name": "shooter",
+  "description": "Generic shooter profile for games without a dedicated template.",
+  "ocr_keywords": ["HEADSHOT", "KILL", "ELIMINATED", "KNOCKED", "VICTORY", "OBJECTIVE"],
+  "regions": {"kill_feed": [0.70, 0.02, 0.29, 0.25], "objective": [0.25, 0.02, 0.50, 0.18], "center": [0.20, 0.18, 0.60, 0.64]},
+  "weights": {"visual": 0.35, "audio": 0.2, "transcript": 0.2, "focus": 0.1, "context": 0.1, "motion": 0.05}
+}

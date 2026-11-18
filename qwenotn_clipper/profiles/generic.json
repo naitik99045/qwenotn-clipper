@@ -1,0 +1,7 @@
+{
+  "name": "generic",
+  "description": "Conservative profile for unknown gameplay or general streams.",
+  "ocr_keywords": ["KILL", "ELIMINATED", "HEADSHOT", "ROUND WON", "VICTORY"],
+  "regions": {"kill_feed": null, "objective": null, "center": null},
+  "weights": {"visual": 0.35, "audio": 0.2, "transcript": 0.2, "focus": 0.1, "context": 0.1, "motion": 0.05}
+}

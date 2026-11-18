@@ -4,15 +4,34 @@ import json
 import re
 import shutil
 import subprocess
+import os
+import sys
 from pathlib import Path
 from typing import Any
 
 
-def require_binary(name: str) -> str:
-    path = shutil.which(name)
-    if not path:
-        raise RuntimeError(f"Required program not found: {name}. Install it and retry.")
-    return path
+def find_executable(name: str, env_var: str | None = None) -> str:
+    """Find a tool without assuming the shell PATH is correctly configured."""
+    candidates: list[str] = []
+    if env_var and os.environ.get(env_var):
+        candidates.append(os.environ[env_var])
+    exe_dir = Path(sys.executable).resolve().parent
+    candidates.extend([str(exe_dir / name), str(exe_dir / f"{name}.exe"), str(exe_dir / "Scripts" / name), str(exe_dir / "Scripts" / f"{name}.exe")])
+    which = shutil.which(name)
+    if which:
+        candidates.append(which)
+    candidates.extend([str(Path.home() / ".local" / "bin" / name), str(Path.home() / "AppData" / "Roaming" / "Python" / "Python311" / "Scripts" / f"{name}.exe")])
+    for candidate in candidates:
+        p = Path(candidate)
+        if p.exists() and p.is_file():
+            return str(p)
+    install = {"yt-dlp": "python -m pip install -U yt-dlp", "ffmpeg": "install FFmpeg and add it to PATH", "ffprobe": "install FFmpeg (ffprobe is included)"}.get(name, f"install {name}")
+    checked = ", ".join(candidates) or "no candidate paths"
+    raise RuntimeError(f"Required program not found: {name}. Install with: {install}. Checked: {checked}")
+
+
+def require_binary(name: str, env_var: str | None = None) -> str:
+    return find_executable(name, env_var)
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
