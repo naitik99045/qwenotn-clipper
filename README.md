@@ -8,7 +8,8 @@ The project intentionally avoids AI-slop editing: no invented dialogue, fake rea
 
 - Downloads a single YouTube source with `yt-dlp`, or accepts a local video file.
 - Uses an optional local `faster-whisper` install to create real captions.
-- Finds candidate moments with deterministic transcript heuristics and deduplication.
+- Finds candidate moments with deterministic transcript heuristics, focus matching, and deduplication.
+- Rejects active livestream URLs before download so a four-hour live stream cannot be buffered indefinitely.
 - Falls back to evenly spaced review clips when no transcript is available.
 - Renders 9:16 MP4s with FFmpeg, centered framing, AAC audio, and burned captions when available.
 - Writes `manifest.json` and one JSON file per clip so agents can inspect scores, timestamps, reasons, and output paths.
@@ -42,6 +43,14 @@ The `faster-whisper` package downloads a model the first time it is used. If you
 qwenotn-clipper clip 'https://www.youtube.com/watch?v=VIDEO_ID' --count 5 --duration 45 --output output/video-1
 ```
 
+For a larger finite VOD, inspect candidates before rendering:
+
+```bash
+qwenotn-clipper analyze 'https://www.youtube.com/watch?v=VIDEO_ID' \
+  --count 30 --duration 45 --focus 'funny GTA moments' \
+  --output output/video-1 --json
+```
+
 For agent use, request JSON:
 
 ```bash
@@ -53,6 +62,8 @@ A local file works too:
 ```bash
 qwenotn-clipper clip ./recording.mp4 --output output/recording
 ```
+
+An active livestream is rejected by design. This prevents an agent from using `--live-from-start` or another indefinite download and filling your disk. Use the completed replay/VOD URL for full processing.
 
 The command exits non-zero with a clear error and JSON `{ "ok": false, "error": "..." }` when a required dependency, input, download, or render fails. It never claims success if an output file is missing or empty.
 
@@ -78,7 +89,7 @@ This works with Antigravity, Claude Code, Cursor, OpenClaw, and other agents tha
 
 ## Reliability model
 
-No media tool can promise zero errors because YouTube formats, codecs, GPU drivers, captions, and platform policies change. qwenotn-clipper is designed to fail safely instead:
+No media tool can promise zero errors or perfect highlight judgment because YouTube formats, codecs, GPU drivers, captions, and platform policies change. qwenotn-clipper is designed to fail safely instead:
 
 - retries downloads and fragments;
 - checks that FFmpeg outputs really exist and are non-empty;
@@ -87,6 +98,7 @@ No media tool can promise zero errors because YouTube formats, codecs, GPU drive
 - produces a usable no-transcript fallback;
 - writes machine-readable error messages;
 - keeps the generated clip free of synthetic content by default.
+- refuses active livestreams rather than pretending that an agent can watch a multi-hour stream reliably.
 
 ## Rights and publishing
 

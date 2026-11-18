@@ -46,7 +46,7 @@ def parse_srt(path: Path) -> list[Segment]:
     return result
 
 
-def select_candidates(segments: list[Segment], duration: float, count: int = 5, target: float = 45.0) -> list[Candidate]:
+def select_candidates(segments: list[Segment], duration: float, count: int = 5, target: float = 45.0, focus: str = "") -> list[Candidate]:
     if not segments:
         return []
     window = max(15.0, min(90.0, target))
@@ -59,6 +59,11 @@ def select_candidates(segments: list[Segment], duration: float, count: int = 5, 
         words = len(text.split())
         score = min(1.0, 0.25 + min(words, 35) / 100)
         reasons = ["complete spoken thought"]
+        focus_terms = [x.lower() for x in re.findall(r"[a-zA-Z0-9']+", focus) if len(x) > 2]
+        matched = [term for term in focus_terms if term in text.lower()]
+        if matched:
+            score += min(0.25, 0.06 * len(matched))
+            reasons.append("matches focus: " + ", ".join(matched[:4]))
         if _HOOKS.search(text):
             score += 0.25
             reasons.append("strong opening language")

@@ -5,7 +5,7 @@ description: Create and review clean vertical clips from a YouTube URL or local 
 
 # qwenotn-clipper
 
-Use the local qwenotn-clipper CLI as the media renderer. Keep the output source-derived: do not add invented dialogue, AI avatars, fake reactions, meme overlays, synthetic audio, or generated hook cards.
+Use the local qwenotn-clipper CLI as the media renderer. Keep the output source-derived: do not add invented dialogue, AI avatars, fake reactions, meme overlays, synthetic audio, or generated hook cards. Never use Chrome or an agent to manually watch an entire multi-hour stream.
 
 ## First-time setup
 
@@ -20,17 +20,26 @@ qwenotn-clipper --help
 
 The host also needs `ffmpeg` and `yt-dlp`. If the command is unavailable, report the exact installation error rather than pretending a clip was created.
 
-## Create clips
+## Create clips from a completed VOD
 
 ```bash
 qwenotn-clipper clip INPUT \
   --count 5 \
   --duration 45 \
+  --focus "best genuine moments" \
   --output output/agent-job \
   --json > output/agent-job/result.json
 ```
 
 `INPUT` may be a YouTube URL or a local video path. Read `output/agent-job/manifest.json` and the `clip_*.json` files. Each clip has a path, timestamps, score, reason, and caption status.
+
+For a large finite VOD, analyze first and render second:
+
+```bash
+qwenotn-clipper analyze INPUT --count 30 --duration 45 --focus "funny GTA moments" --output output/agent-job --json
+```
+
+The tool rejects an active livestream before downloading it. Do not override this safety behavior. Wait for the replay/VOD or use a dedicated bounded live-window implementation.
 
 ## Review policy
 

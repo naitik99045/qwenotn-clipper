@@ -4,7 +4,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from .utils import format_time, require_binary, run, safe_name
+from .utils import format_time, require_binary, run
 
 
 def probe_duration(path: Path) -> float:
@@ -13,12 +13,41 @@ def probe_duration(path: Path) -> float:
     return float(result.stdout.strip())
 
 
-def download(source: str, workdir: Path) -> tuple[Path, Path | None]:
+def inspect_source(source: str) -> dict:
+    """Return yt-dlp metadata without downloading media.
+
+    Active livestreams are deliberately rejected by the normal pipeline. This
+    prevents an agent from accidentally buffering a stream forever.
+    """
+    if Path(source).exists():
+        return {"source": source, "is_live": False, "live_status": "not_live", "duration": None}
+    require_binary("yt-dlp")
+    result = run(["yt-dlp", "--dump-single-json", "--skip-download", "--no-playlist", "--no-warnings", source], check=False)
+    if result.returncode:
+        raise RuntimeError("Could not inspect the source with yt-dlp.\n" + result.stderr[-2000:])
+    try:
+        data = __import__("json").loads(result.stdout)
+    except Exception as exc:
+        raise RuntimeError("yt-dlp returned invalid metadata") from exc
+    return {
+        "source": source,
+        "title": data.get("title"),
+        "is_live": bool(data.get("is_live")) or data.get("live_status") == "is_live",
+        "live_status": data.get("live_status"),
+        "duration": data.get("duration"),
+        "webpage_url": data.get("webpage_url", source),
+    }
+
+
+def download(source: str, workdir: Path, *, allow_live: bool = False) -> tuple[Path, Path | None]:
     if Path(source).exists():
         media = Path(source).resolve()
         sidecar = media.with_suffix(".srt")
         return media, sidecar if sidecar.exists() else None
     require_binary("yt-dlp")
+    metadata = inspect_source(source)
+    if metadata.get("is_live") and not allow_live:
+        raise RuntimeError("Active livestream detected. Full-stream downloading is disabled. Use the completed VOD or an explicit bounded live-window mode.")
     workdir.mkdir(parents=True, exist_ok=True)
     template = str(workdir / "source.%(ext)s")
     cmd = ["yt-dlp", "--no-playlist", "--retries", "3", "--fragment-retries", "3", "-f", "bv*[height<=1080]+ba/b[height<=1080]/b", "--merge-output-format", "mp4", "-o", template, source]
