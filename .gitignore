@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+workspace/
+output/
+*.mp4
+*.mkv
+*.webm
+*.srt
+.pytest_cache/
+.coverage
+.DS_Store
+
+qwenotn_clipper.egg-info/
+.pytest_cache/

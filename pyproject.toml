@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qwenotn-clipper"
+version = "0.1.0"
+description = "A local, agent-friendly YouTube/VOD clipper with deterministic highlights and clean captions."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "qwenotn"}]
+dependencies = []
+
+[project.optional-dependencies]
+gui = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9"]
+transcribe = ["faster-whisper>=1.0"]
+all = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9", "faster-whisper>=1.0"]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+qwenotn-clipper = "qwenotn_clipper.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["qwenotn_clipper*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
